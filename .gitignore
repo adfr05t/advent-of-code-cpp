@@ -1,0 +1,14 @@
+# Code::Blocks build output
+bin/
+obj/
+
+# Compiled C++ files
+*.exe
+*.o
+
+# Code::Blocks temporary files
+*.depend
+*.layout
+
+# Advent of Code puzzle inputs
+input.txt
