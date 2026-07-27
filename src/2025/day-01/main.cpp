@@ -2,8 +2,15 @@
 #include <iostream>
 #include <string>
 
+struct Instruction
+{
+    char direction;
+    int distance;
+};
+
 int solvePuzzle(std::ifstream& input);
-int rotateDial(int dialPosition, char direction, int distance);
+Instruction parseLine(const std::string& line);
+int rotateDial(int dialPosition, Instruction instruction);
 
 int main()
 {
@@ -25,14 +32,13 @@ int solvePuzzle(std::ifstream& input)
 {
     int dialPosition = 50;
     int dialAtZeroCount = 0;
-    std::string instruction;
+    std::string line;
 
-    while (getline(input, instruction))
+    while (std::getline(input, line))
     {
-        char direction = instruction[0];
-        int distance = stoi(instruction.substr(1));
+        Instruction instruction = parseLine(line);
 
-        dialPosition = rotateDial(dialPosition, direction, distance);
+        dialPosition = rotateDial(dialPosition, instruction);
         std::cout << dialPosition << "\n";
 
         if (dialPosition == 0)
@@ -44,19 +50,27 @@ int solvePuzzle(std::ifstream& input)
     return dialAtZeroCount;
 }
 
-int rotateDial(int dialPosition, char direction, int distance)
+Instruction parseLine(const std::string& line)
+{
+    return {
+        line[0],
+        std::stoi(line.substr(1))
+    };
+}
+
+int rotateDial(int dialPosition, Instruction instruction)
 {
     const int lowerLimit = 0;
     const int upperLimit = 99;
     const int dialRange = upperLimit - lowerLimit + 1;
 
-    if (direction == 'L')
+    if (instruction.direction == 'L')
     {
-        dialPosition -= distance % dialRange;
+        dialPosition -= instruction.distance % dialRange;
     }
-    else if (direction == 'R')
+    else if (instruction.direction == 'R')
     {
-        dialPosition += distance % dialRange;
+        dialPosition += instruction.distance % dialRange;
     }
 
     if (dialPosition < lowerLimit)
