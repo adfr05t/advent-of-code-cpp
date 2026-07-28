@@ -2,15 +2,27 @@
 #include <iostream>
 #include <string>
 
+struct Solution
+{
+    int part1;
+    int part2;
+};
+
 struct Instruction
 {
     char direction;
     int distance;
 };
 
-int solvePuzzle(std::ifstream& input);
+struct RotationResult
+{
+    int dialPosition;
+    int dialPassedZeroCount;
+};
+
+Solution solvePuzzle(std::ifstream& input);
 Instruction parseLine(const std::string& line);
-int rotateDial(int dialPosition, Instruction instruction);
+RotationResult rotateDial(int dialPosition, const Instruction& instruction);
 
 int main()
 {
@@ -22,32 +34,39 @@ int main()
         return 1;
     }
 
-    int solution = solvePuzzle(puzzleInput);
-    std::cout << "Solution: " << solution;
+    Solution solution = solvePuzzle(puzzleInput);
+    std::cout << "Answer to part 1: " << solution.part1 << "\n";
+    std::cout << "Answer to part 2: " << solution.part2;
 
     return 0;
 }
 
-int solvePuzzle(std::ifstream& input)
+Solution solvePuzzle(std::ifstream& input)
 {
     int dialPosition = 50;
-    int dialAtZeroCount = 0;
+    int dialAtZeroCount, dialPassedZeroCount = 0;
+    //int dialPassedZeroCount = 0;
     std::string line;
 
     while (std::getline(input, line))
     {
         Instruction instruction = parseLine(line);
 
-        dialPosition = rotateDial(dialPosition, instruction);
-        std::cout << dialPosition << "\n";
+        RotationResult rotationResult = rotateDial(dialPosition, instruction);
+        dialPosition = rotationResult.dialPosition;
 
         if (dialPosition == 0)
         {
             dialAtZeroCount++;
         }
+
+        dialPassedZeroCount += rotationResult.dialPassedZeroCount;
     }
 
-    return dialAtZeroCount;
+    return {
+        dialAtZeroCount,
+        dialPassedZeroCount
+    };
 }
 
 Instruction parseLine(const std::string& line)
@@ -58,29 +77,26 @@ Instruction parseLine(const std::string& line)
     };
 }
 
-int rotateDial(int dialPosition, Instruction instruction)
+RotationResult rotateDial(int dialPosition, const Instruction& instruction)
 {
     const int lowerLimit = 0;
     const int upperLimit = 99;
     const int dialRange = upperLimit - lowerLimit + 1;
+    int dialPassedZeroCount = 0;
 
-    if (instruction.direction == 'L')
+    if (instruction.direction == 'R')
     {
-        dialPosition -= instruction.distance % dialRange;
+        dialPassedZeroCount = (dialPosition + instruction.distance) / dialRange;
+        dialPosition = (dialPosition + instruction.distance) % dialRange;
     }
-    else if (instruction.direction == 'R')
+    else if (instruction.direction == 'L')
     {
-        dialPosition += instruction.distance % dialRange;
-    }
-
-    if (dialPosition < lowerLimit)
-    {
-        dialPosition += dialRange;
-    }
-    else if (dialPosition > upperLimit)
-    {
-        dialPosition -= dialRange;
+        dialPassedZeroCount = (instruction.distance + (dialRange - dialPosition) % dialRange) / dialRange;
+        dialPosition = ((dialPosition - instruction.distance) % dialRange + dialRange) % dialRange;
     }
 
-    return dialPosition;
+    return {
+        dialPosition,
+        dialPassedZeroCount
+    };
 }
