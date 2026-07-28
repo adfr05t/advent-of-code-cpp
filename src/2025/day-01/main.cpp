@@ -44,8 +44,8 @@ int main()
 Solution solvePuzzle(std::ifstream& input)
 {
     int dialPosition = 50;
-    int dialAtZeroCount, dialPassedZeroCount = 0;
-    //int dialPassedZeroCount = 0;
+    int dialAtZeroCount = 0;
+    int dialPassedZeroCount = 0;
     std::string line;
 
     while (std::getline(input, line))
@@ -79,9 +79,9 @@ Instruction parseLine(const std::string& line)
 
 RotationResult rotateDial(int dialPosition, const Instruction& instruction)
 {
-    const int lowerLimit = 0;
-    const int upperLimit = 99;
-    const int dialRange = upperLimit - lowerLimit + 1;
+    constexpr int lowerLimit = 0;
+    constexpr int upperLimit = 99;
+    constexpr int dialRange = upperLimit - lowerLimit + 1;
     int dialPassedZeroCount = 0;
 
     if (instruction.direction == 'R')
