@@ -1,6 +1,8 @@
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <string>
+#include <array>
 
 struct Solution
 {
@@ -9,6 +11,7 @@ struct Solution
 };
 
 Solution solvePuzzle(std::ifstream& input);
+std::string getLowerAndUpper(std::string idRange);
 
 int main()
 {
@@ -29,8 +32,37 @@ int main()
 
 Solution solvePuzzle(std::ifstream& input)
 {
+    std::string idRange;
+
+    while (std::getline(input,idRange, ','))
+    {
+        std::string lowerAndUpper[2] = getLowerAndUpper(idRange);
+
+        
+        std::cout << "Lower: " << lowerAndUpper[0] << "\n";
+        std::cout << "Upper: " << lowerAndUpper[1] << "\n";
+
+    }
+
+
     return {
         0,
         0
     };
 }
+
+std::array<std::string, 2> getLowerAndUpper(std::string idRange)
+{
+    std::stringstream ss(idRange);
+    std::string lowerAndUpper[2];
+
+    for (int i = 0; i < 2; i++)
+    {
+        std::getline(ss, lowerAndUpper[i], '-');
+    }
+
+    return lowerAndUpper;
+}
+
+
+

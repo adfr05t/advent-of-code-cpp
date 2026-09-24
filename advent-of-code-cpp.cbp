@@ -37,7 +37,10 @@
 		<Unit filename="src/2025/day-01/README.md" />
 		<Unit filename="src/2025/day-01/example.txt" />
 		<Unit filename="src/2025/day-01/input.txt" />
-		<Unit filename="src/2025/day-01/main.cpp" />
+		<Unit filename="src/2025/day-01/main.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
 		<Unit filename="src/2025/day-02/README.md" />
 		<Unit filename="src/2025/day-02/example.txt" />
 		<Unit filename="src/2025/day-02/input.txt" />
